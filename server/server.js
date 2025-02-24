@@ -26,6 +26,10 @@ app.get('/jira/:id', (req, res) => {
   });
 });
 
+// post call to AI
+app.get('/ai', (req, res) => {
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
