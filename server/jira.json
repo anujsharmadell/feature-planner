@@ -1,4 +1,53 @@
 {
-    "name": "jira",
-    "version": "1.0.0"
+    "stories": [
+        {
+            "id": "STR-1",
+            "name": "Story 1",
+            "summary": "Summary of story 1",
+            "storyPoints": 3,
+            "featureId": "FTR-1",
+            "epicId": "EPC-1"
+        },
+        {
+            "id": "STR-2",
+            "name": "Story 2",
+            "summary": "Summary of story 2",
+            "storyPoints": 5,
+            "featureId": "FTR-1",
+            "epicId": "EPC-1",
+            "dependencies": [
+                "STR-1"
+            ]
+        },
+        {
+            "id": "STR-3",
+            "name": "Story 3",
+            "summary": "Summary of story 3",
+            "storyPoints": 2,
+            "featureId": "FTR-1",
+            "epicId": "EPC-2"
+        },
+        {
+            "id": "STR-4",
+            "name": "Story 4",
+            "summary": "Summary of story 4",
+            "storyPoints": 4,
+            "featureId": "FTR-1",
+            "epicId": "EPC-2",
+            "dependencies": [
+                "STR-3"
+            ]
+        },
+        {
+            "id": "STR-5",
+            "name": "Story 5",
+            "summary": "Summary of story 5",
+            "storyPoints": 3,
+            "featureId": "FTR-1",
+            "epicId": "EPC-1",
+            "dependencies": [
+                "STR-3"
+            ]
+        }
+    ]
 }

@@ -9,37 +9,69 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [capacities, setCapacities] = useState({});
-  const [analysis, setAnalysis] = useState('');
+  const [jiraData, setJiraData] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
 
-  const performAnalysis = async (lanesData, capacitiesData) => {
-    setAnalyzing(true);
-    try {
-      const analysisResult = await analyzeBoardData(lanesData, capacitiesData);
-      setAnalysis(analysisResult);
-    } catch (err) {
-      console.error('Analysis failed:', err);
-      setError('Failed to analyze board data');
-    } finally {
-      setAnalyzing(false);
-    }
-  };
+  // const performAnalysis = async (lanesData, capacitiesData) => {
+  //   setAnalyzing(true);
+  //   try {
+  //     const analysisResult = await analyzeBoardData(lanesData, capacitiesData);
+  //     setAnalysis(analysisResult);
+  //   } catch (err) {
+  //     console.error('Analysis failed:', err);
+  //     setError('Failed to analyze board data');
+  //   } finally {
+  //     setAnalyzing(false);
+  //   }
+  // };
 
-  const fetchData = async () => {
+  function cleanJsonString(response) {
+    // Remove the Markdown language fences
+    // const jsonText = response.replace(/^```.*```$/, '');
+
+    // // Extract the JSON data
+    // const jsonData = jsonText.trim().replace(/^{|$/g, '');
+
+    // console.log("jsonData", jsonData);
+
+    // Parse the JSON data
+    return JSON.parse(response);
+  }
+
+  const fetchSprintPlan = async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await fetchKanbanData();
-      setLanes(data.lanes);
+
+      const data = await fetch('http://localhost:3000/ai');
+      const sprintPlan = await data.json();
+
+      console.log("sprintPlan", cleanJsonString(sprintPlan.choices[0].message.content));
+      const sprintPlanData = cleanJsonString(sprintPlan.choices[0].message.content);
+      let lanes = [];
+
+      Object.keys(sprintPlanData).forEach(sprint => {
+        lanes.push({
+          id: sprint,
+          title: sprint,
+          cards: sprintPlanData[sprint]
+        })
+      })
+
+      setLanes(lanes);
+
       // Initialize capacities for new lanes
       const initialCapacities = {};
-      data.lanes.forEach(lane => {
-        initialCapacities[lane.id] = capacities[lane.id] || 10;
+
+      lanes.forEach(lane => {
+        initialCapacities[lane.id] = capacities[lane.id] || 5;
       });
+
       setCapacities(initialCapacities);
-      
-      // Trigger analysis after data is loaded
-      await performAnalysis(data.lanes, initialCapacities);
+
+      // // Trigger analysis after data is loaded
+      // await performAnalysis(data.lanes, initialCapacities);
+
     } catch (err) {
       setError('Failed to fetch kanban data');
       console.error('Error fetching data:', err);
@@ -48,12 +80,25 @@ function App() {
     }
   };
 
+  const fetchJiraData = async () => {
+    try {
+      const data = await fetch('http://localhost:3000/jira/123');
+      const jd = await data.json();
+
+      setJiraData(jd.stories);
+
+    } catch (err) {
+      setError('Failed to fetch Jira data');
+      console.error('Error fetching Jira data:', err);
+    }
+  };
+
   const handleSubmit = () => {
     if (!inputText.trim()) return;
     console.log('Submitted:', inputText);
     setInputText('');
     // Refresh data after submission
-    fetchData();
+    fetchJiraData();
   };
 
   const handleCapacityChange = async (laneId, value) => {
@@ -62,7 +107,7 @@ function App() {
       [laneId]: value
     };
     setCapacities(newCapacities);
-    
+
     // Trigger analysis when capacity changes
     await performAnalysis(lanes, newCapacities);
   };
@@ -91,7 +136,7 @@ function App() {
       </div>
 
       {/* Analysis Section */}
-      <div className="max-w-4xl mx-auto mb-8">
+      <div className="w-full mx-auto mb-8">
         <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-gray-800">Board Analysis</h2>
@@ -102,15 +147,53 @@ function App() {
               </div>
             )}
           </div>
-          <div className="prose prose-sm max-w-none">
-            {analysis ? (
-              <div className="whitespace-pre-line text-gray-700">{analysis}</div>
+          <div className="w-full flex flex-wrap">
+            {jiraData ? (
+              <>
+                {jiraData.map((card) => (
+                  <div className="w-full sm:w-1/3 md:w-1/3 xl:w-1/3 p-4">
+                    <div className="bg-white shadow-md rounded p-4">
+                      <div key={card.id}>
+                        <h3 className="text-md font-semibold text-gray-800 mb-2">
+                          {card.name}
+                        </h3>
+                        <p className="text-gray-600 text-sm mb-4">
+                          {card.summary}
+                        </p>
+                        <div className="flex items-center justify-between text-sm">
+                          {`${card.featureId} - ${card.epicId}`}
+                          {
+                            card.dependencies && card.dependencies.map((dep) => (
+                              <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                {dep}
+                              </div>
+                            ))
+                          }
+                          <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {card.storyPoints} pts
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </>
             ) : (
               <div className="flex items-center gap-2 text-gray-500">
                 <AlertCircle size={18} />
                 <span>No analysis available</span>
               </div>
             )}
+          </div>
+          <div className='flex justify-end'>
+            <button
+              onClick={fetchSprintPlan}
+              disabled={loading}
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              {loading && <Loader2 className="animate-spin" size={18} />}
+              {loading ? 'Loading...' : 'Plan Features'}
+            </button>
           </div>
         </div>
       </div>
@@ -156,20 +239,19 @@ function App() {
                 {lane.cards.map((card) => (
                   <div key={card.id} className="bg-white rounded-lg shadow-sm p-4 transition-all duration-200 hover:shadow-md">
                     <h3 className="text-md font-semibold text-gray-800 mb-2">
-                      {card.title}
+                      {card.name}
                     </h3>
                     <p className="text-gray-600 text-sm mb-4">
-                      {card.description}
+                      {card.summary}
                     </p>
                     <div className="flex items-center justify-between text-sm">
                       <a
-                        href={card.link}
+                        href={card.epicId}
                         className="text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Link2 size={16} />
-                        <span>View</span>
+                        {`${card.featureId} - ${card.epicId}`}
                       </a>
                       <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                         {card.storyPoints} pts
