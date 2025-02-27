@@ -114,8 +114,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
+      <h1 className="text-3xl font-semibold mb-4">
+        AI Feature Planner
+      </h1>
       {/* Input Section */}
-      <div className="max-w-4xl mx-auto mb-8">
+      <div className="w-full mx-auto mb-8">
         <div className="bg-white rounded-lg shadow-sm p-4 flex gap-4">
           <input
             type="text"
@@ -136,10 +139,12 @@ function App() {
       </div>
 
       {/* Analysis Section */}
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        Feature Details
+      </h2>
       <div className="w-full mx-auto mb-8">
         <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Board Analysis</h2>
             {analyzing && (
               <div className="flex items-center gap-2 text-blue-600">
                 <Loader2 className="animate-spin" size={18} />
@@ -162,6 +167,11 @@ function App() {
                         </p>
                         <div className="flex items-center justify-between text-sm">
                           {`${card.featureId} - ${card.epicId}`}
+                          <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {card.storyPoints} pts
+                          </div>
+                        </div>
+                        <div className="w-full inline-flex items-center mt-2 py-1 justify-end">
                           {
                             card.dependencies && card.dependencies.map((dep) => (
                               <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
@@ -169,9 +179,6 @@ function App() {
                               </div>
                             ))
                           }
-                          <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            {card.storyPoints} pts
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -181,7 +188,7 @@ function App() {
             ) : (
               <div className="flex items-center gap-2 text-gray-500">
                 <AlertCircle size={18} />
-                <span>No analysis available</span>
+                <span>No Feature Details Available</span>
               </div>
             )}
           </div>
@@ -192,7 +199,7 @@ function App() {
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {loading && <Loader2 className="animate-spin" size={18} />}
-              {loading ? 'Loading...' : 'Plan Features'}
+              {loading ? 'Loading...' : 'Generate Feature Plan'}
             </button>
           </div>
         </div>
@@ -215,6 +222,9 @@ function App() {
       )}
 
       {/* Kanban Board */}
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        Sprint-wise Feature Plan
+      </h2>
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {lanes.map((lane) => (
@@ -223,7 +233,7 @@ function App() {
                 <h2 className="text-lg font-semibold text-gray-700">{lane.title}</h2>
                 <div className="flex items-center gap-2">
                   <label htmlFor={`capacity-${lane.id}`} className="text-sm text-gray-600">
-                    Capacity:
+                    Team Velocity:
                   </label>
                   <input
                     id={`capacity-${lane.id}`}
@@ -239,10 +249,10 @@ function App() {
                 {lane.cards.map((card) => (
                   <div key={card.id} className="bg-white rounded-lg shadow-sm p-4 transition-all duration-200 hover:shadow-md">
                     <h3 className="text-md font-semibold text-gray-800 mb-2">
-                      {card.name}
+                      {card.id || card.name}
                     </h3>
                     <p className="text-gray-600 text-sm mb-4">
-                      {card.summary}
+                      {card.summary || card.name}
                     </p>
                     <div className="flex items-center justify-between text-sm">
                       <a

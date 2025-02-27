@@ -1,52 +1,52 @@
 {
     "stories": [
         {
-            "id": "STR-1",
-            "name": "Story 1",
-            "summary": "Summary of story 1",
+            "id": "CIRRUS-26800",
+            "name": "CIRRUS-26800",
+            "summary": "Reference workflow service exists",
             "storyPoints": 3,
-            "featureId": "FTR-1",
-            "epicId": "EPC-1"
+            "featureId": "FOIT-1277",
+            "epicId": "CIRRUS-26783"
         },
         {
-            "id": "STR-2",
-            "name": "Story 2",
-            "summary": "Summary of story 2",
+            "id": "CIRRUS-26822",
+            "name": "CIRRUS-26822",
+            "summary": "Reference parent workflow can create JMS job",
             "storyPoints": 5,
-            "featureId": "FTR-1",
-            "epicId": "EPC-1",
+            "featureId": "FOIT-1277",
+            "epicId": "CIRRUS-26783",
             "dependencies": [
-                "STR-1"
+                "CIRRUS-26800"
             ]
         },
         {
-            "id": "STR-3",
-            "name": "Story 3",
-            "summary": "Summary of story 3",
+            "id": "CIRRUS-27007",
+            "name": "CIRRUS-27007",
+            "summary": "CIQ Migration of cirrus-pscale-update-reference repo",
             "storyPoints": 2,
-            "featureId": "FTR-1",
-            "epicId": "EPC-2"
+            "featureId": "FOIT-1277",
+            "epicId": "CIRRUS-27051"
         },
         {
-            "id": "STR-4",
-            "name": "Story 4",
-            "summary": "Summary of story 4",
+            "id": "CIRRUS-27100",
+            "name": "CIRRUS-27100",
+            "summary": "Internal validation of hard node replacement in PCF env after porting + issue fixes",
             "storyPoints": 4,
-            "featureId": "FTR-1",
-            "epicId": "EPC-2",
+            "featureId": "FOIT-1277",
+            "epicId": "CIRRUS-27051",
             "dependencies": [
-                "STR-3"
+                "CIRRUS-27007"
             ]
         },
         {
-            "id": "STR-5",
-            "name": "Story 5",
-            "summary": "Summary of story 5",
+            "id": "CIRRUS-26799",
+            "name": "CIRRUS-26799",
+            "summary": "Reference workflow can be initiated by REST API",
             "storyPoints": 3,
-            "featureId": "FTR-1",
-            "epicId": "EPC-1",
+            "featureId": "FOIT-1277",
+            "epicId": "CIRRUS-26783",
             "dependencies": [
-                "STR-3"
+                "CIRRUS-27007"
             ]
         }
     ]
