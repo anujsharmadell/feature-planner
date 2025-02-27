@@ -25,24 +25,13 @@
             "summary": "CIQ Migration of cirrus-pscale-update-reference repo",
             "storyPoints": 2,
             "featureId": "FOIT-1277",
-            "epicId": "CIRRUS-27051"
+            "epicId": "CIRRUS-26783"
         },
         {
             "id": "CIRRUS-27100",
             "name": "CIRRUS-27100",
             "summary": "Internal validation of hard node replacement in PCF env after porting + issue fixes",
             "storyPoints": 4,
-            "featureId": "FOIT-1277",
-            "epicId": "CIRRUS-27051",
-            "dependencies": [
-                "CIRRUS-27007"
-            ]
-        },
-        {
-            "id": "CIRRUS-26799",
-            "name": "CIRRUS-26799",
-            "summary": "Reference workflow can be initiated by REST API",
-            "storyPoints": 3,
             "featureId": "FOIT-1277",
             "epicId": "CIRRUS-26783",
             "dependencies": [

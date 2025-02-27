@@ -12,9 +12,9 @@ const port = 3000;
 app.use(cors())
 
 const PROMPT_CONTENT = `
-${JSON.stringify(jira.stories, null, 2)}
+${JSON.stringify(jira.stories)}
 
-Given the above list of stories, assign these stories into sprints in a most optimised capacity utilization way.
+Given the above list of stories, assign these stories into sprints in a most optimised capacity utilization and according to the dependencies. Where dependent story should be completed in previous sprint.
 
 Sprint capacity is given below in the object format, where key is sprint and value is capacity, here capacity represents number of maximum story points accommodate which should be less than or equal to the capacity of the sprint
 
